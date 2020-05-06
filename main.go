@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/NetSPI/goddi/ddi"
+	goddi "github.com/lsochanowski/goddi/ddi"
 )
 
 func main() {
@@ -60,12 +60,17 @@ func main() {
 	goddi.GetDomainTrusts(li.Conn, baseDN)
 	goddi.GetDomainControllers(li.Conn, baseDN)
 	goddi.GetUsers(li.Conn, baseDN)
-	goddi.GetGroupMembers(li.Conn, baseDN, "Domain Admins")
-	goddi.GetGroupMembers(li.Conn, baseDN, "Enterprise Admins")
-	goddi.GetGroupMembers(li.Conn, baseDN, "Forest Admins")
+	//goddi.GetGroupMembers(li.Conn, baseDN, "Domain Admins")
+	//goddi.GetGroupMembers(li.Conn, baseDN, "Enterprise Admins")
+	//goddi.GetGroupMembers(li.Conn, baseDN, "Forest Admins")
 	goddi.GetUsersLocked(li.Conn, baseDN)
 	goddi.GetUsersDisabled(li.Conn, baseDN)
-	goddi.GetGroupsAll(li.Conn, baseDN)
+
+	for _, entry := range goddi.GetGroupsAll(li.Conn, baseDN) {
+		goddi.GetGroupMembers(li.Conn, baseDN, entry.GetAttributeValue("sAMAccountName"))
+
+	}
+
 	goddi.GetDomainSite(li.Conn, baseDN)
 	goddi.GetDomainSubnet(li.Conn, baseDN)
 	goddi.GetDomainComputers(li.Conn, baseDN)

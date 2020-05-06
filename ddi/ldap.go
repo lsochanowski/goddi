@@ -7,9 +7,10 @@ package goddi
 
 import (
 	"fmt"
-	"gopkg.in/ldap.v2"
 	"log"
 	"strings"
+
+	"gopkg.in/ldap.v2"
 )
 
 // GetUsers all domain users and checks for sensitive data in Description
@@ -690,7 +691,7 @@ func GetDomainTrusts(conn *ldap.Conn, baseDN string) {
 
 // GetGroupsAll all groups
 // Reference: Scott Sutherland (@_nullbind)
-func GetGroupsAll(conn *ldap.Conn, baseDN string) {
+func GetGroupsAll(conn *ldap.Conn, baseDN string) []*ldap.Entry {
 
 	attributes := []string{
 		"sAMAccountName",
@@ -714,8 +715,9 @@ func GetGroupsAll(conn *ldap.Conn, baseDN string) {
 			entry.GetAttributeValue("member")}
 		csv = append(csv, data)
 	}
-
 	writeCSV("Domain_Groups_All", csv)
+	return sr.Entries
+
 }
 
 // Helper function for LDAP search
